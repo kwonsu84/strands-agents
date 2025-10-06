@@ -16,7 +16,7 @@ def load_agent():
         
     model = OpenAIModel(
         client_args={"api_key": api_key},
-        model_id="gpt-5-mini",
+        model_id="gpt-5-nano",
         streaming=False,                      # ← 여기! stream 아님
         params={
             "max_completion_tokens": 800,     # temperature 등 샘플링 파라미터는 미사용
