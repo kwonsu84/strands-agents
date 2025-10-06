@@ -1,4 +1,4 @@
 streamlit
 openai
+"strands-agents[openai]"
 strands-agents-tools
-strands-agents[openai]
