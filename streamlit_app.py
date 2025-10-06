@@ -46,9 +46,22 @@ if st.button("에이전트 실행"):
         try:
             result = agent(user_input)      # 사용자가 입력한 문장을 에이전트에게 전달
             st.success("응답")              # 성공 메시지
-            
+
             # 에이전트가 만든 대답 보여주기
-            st.write(result.message)
+            # result.message 안에서 text 값만 출력
+            msg = result.message
+            
+            # dict → content → text 구조만 꺼내기
+            if isinstance(msg, dict):
+                content = msg.get("content", [])
+                # 각 블록에서 text 키가 있으면 추출
+                texts = [block["text"] for block in content if isinstance(block, dict) and "text" in block]
+                if texts:
+                    st.write("\n".join(texts))
+                else:
+                    st.write("⚠️ 출력할 text가 없습니다.")
+            else:
+                st.write(result.message)
 
         except Exception as e:
             st.error(f"오류: {e}")          # 문제가 생기면 오류 표시
