@@ -17,12 +17,12 @@ def load_agent():
     model = OpenAIModel(
         client_args={"api_key": api_key},
         model_id="gpt-5-mini",
+        stream=False,  # ← 스트리밍 비활성화
         params={
-            "max_completion_tokens": 800,
-            # temperature/top_p 등도 넣지 말 것 (일부 gpt-5-* 미지원)
+            "max_completion_tokens": 800
         },
     )
-    
+
     return Agent(model=model, tools=[calculator],
                  system_prompt="You are a helpful assistant.")
 
