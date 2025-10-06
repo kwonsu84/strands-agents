@@ -4,7 +4,7 @@ from strands import Agent
 from strands_tools import calculator, current_time
 
 # 페이지 제목
-st.title("🧠 Strands Agent Demo (수정 버전)")
+st.title("🧠 Strands Agent 샘플 테스트")
 
 # 사용자 입력 받기
 user_input = st.text_input("무엇을 계산하거나 알고 싶나요?", "7 * 9")
