@@ -17,7 +17,7 @@ def load_agent():
     model = OpenAIModel(
         client_args={"api_key": api_key},
         model_id="gpt-5-mini",
-        stream=False,  # ← 스트리밍 비활성화
+        streaming=False,  # ← 스트리밍 비활성화
         params={
             "max_completion_tokens": 800
         },
