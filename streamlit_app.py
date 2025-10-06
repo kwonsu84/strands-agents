@@ -13,14 +13,18 @@ def load_agent():
     api_key = st.secrets.get("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY가 설정되어 있지 않습니다.")
+        
     model = OpenAIModel(
-        client_args={  # OpenAI 클라이언트 설정
-            "api_key": api_key,
-            # "base_url": "https://api.openai.com/v1",  # (필요 시 커스텀/호환 API 엔드포인트)
-        },
-        model_id="gpt-5-mini",            # 모델 ID
-        params={"max_completion_tokens": 800, "temperature": 0.3},  # 모델 파라미터
+        client_args={"api_key": api_key},
+        model_id="gpt-5-mini",
+        params={
+            "max_completion_tokens": 800,      # 출력 토큰 제한
+            # "temperature": … 제거 (허용되지 않음)
+            # 필요할 경우 reasoning_effort 또는 reasoning 인자 사용
+            "reasoning": {"effort": "medium"}  # 예: minimal, low, medium, high
+        }
     )
+
     return Agent(model=model, tools=[calculator],
                  system_prompt="You are a helpful assistant.")
 
