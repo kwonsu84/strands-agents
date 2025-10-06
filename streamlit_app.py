@@ -18,13 +18,11 @@ def load_agent():
         client_args={"api_key": api_key},
         model_id="gpt-5-mini",
         params={
-            "max_completion_tokens": 800,      # 출력 토큰 제한
-            # "temperature": … 제거 (허용되지 않음)
-            # 필요할 경우 reasoning_effort 또는 reasoning 인자 사용
-            "reasoning": {"effort": "medium"}  # 예: minimal, low, medium, high
-        }
+            "max_completion_tokens": 800,
+            # temperature/top_p 등도 넣지 말 것 (일부 gpt-5-* 미지원)
+        },
     )
-
+    
     return Agent(model=model, tools=[calculator],
                  system_prompt="You are a helpful assistant.")
 
