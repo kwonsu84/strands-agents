@@ -26,7 +26,7 @@ def load_agent():
         model_id="gpt-5-nano",             # 사용할 모델 이름
         streaming=False,                   # 천천히 말하기(스트리밍) 끔
         params={
-            "max_completion_tokens": 800,  # 최대 대답 길이 (단어 수 제한)
+            "max_completion_tokens": 4444,  # 최대 대답 길이 (단어 수 제한)
         },
     )
 
