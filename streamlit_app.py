@@ -6,7 +6,7 @@ from strands.models.openai import OpenAIModel  # OpenAI 모델을 쓰기 위한 
 from strands_tools import calculator           # 계산 도구 (에이전트가 계산할 수 있게 함)
 
 # 🧠 화면 제목 쓰기
-st.title("🧠 Strands Agent With OpenAI Demo")
+st.title("🧠 Strands Agent With OpenAI")
 
 # ✏️ 사용자가 질문이나 계산식을 입력할 수 있는 입력창 만들기
 user_input = st.text_input("무엇을 계산하거나 물어볼까요?", "What is 42^5?")
