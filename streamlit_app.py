@@ -34,7 +34,7 @@ def load_agent():
     return Agent(
         model=model, 
         tools=[calculator],
-        system_prompt="You are a helpful assistant."  # “친절한 도우미가 되어라” 라는 지시문
+        system_prompt="정답만 이야기하고 추가적인 내용을 답하지 않는다. 예르 들어 '3 더하기 3은?' 이라고 질문하면 '6' 이라고만 답한다."  # “친절한 도우미가 되어라” 라는 지시문
     )
 
 # 에이전트 실제로 만들기
