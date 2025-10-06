@@ -66,13 +66,12 @@ if st.button("에이전트 실행"):
         except Exception as e:
             st.error(f"오류: {e}")          # 문제가 생기면 오류 표시
 
-# 📜 체크박스로 “대화 내역 보기”를 켜면, 이전 대화 내용을 화면에 보여줌
-if st.checkbox("대화 내역 보기"):
-    for msg in agent.messages:              # 대화 기록을 하나씩 읽어오기
-        role = msg.get("role", "")          # 누가 말했는지 (사용자 or 에이전트)
-        content = ""
-        if msg.get("content"):              # 실제 말한 내용 꺼내기
-            block0 = msg["content"][0]
-            content = block0.get("text") or str(block0)
-        # 💬 화면에 말한 사람 이름과 내용을 보여줌
-        st.markdown(f"**{role.upper()}**: {content}")
+# 📜 이전 대화 내용을 화면에 보여줌
+for msg in agent.messages:              # 대화 기록을 하나씩 읽어오기
+    role = msg.get("role", "")          # 누가 말했는지 (사용자 or 에이전트)
+    content = ""
+    if msg.get("content"):              # 실제 말한 내용 꺼내기
+        block0 = msg["content"][0]
+        content = block0.get("text") or str(block0)
+    # 💬 화면에 말한 사람 이름과 내용을 보여줌
+    st.markdown(f"**{role.upper()}**: {content}")
