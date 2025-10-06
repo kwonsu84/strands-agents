@@ -18,7 +18,7 @@ def load_agent():
             "api_key": api_key,
             # "base_url": "https://api.openai.com/v1",  # (필요 시 커스텀/호환 API 엔드포인트)
         },
-        model_id="gpt-4o",            # 모델 ID
+        model_id="gpt-5-mini",            # 모델 ID
         params={"max_tokens": 1000, "temperature": 0.3},  # 모델 파라미터
     )
     return Agent(model=model, tools=[calculator],
