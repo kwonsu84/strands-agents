@@ -72,8 +72,10 @@ st.write("❤️ 사용자 최근 질문")
 for msg in agent.messages:              # 대화 기록을 하나씩 읽어오기
     role = msg.get("role", "")          # 누가 말했는지 (사용자 or 에이전트)
     content = ""
+    
     if msg.get("content"):              # 실제 말한 내용 꺼내기
         block0 = msg["content"][0]
         content = block0.get("text") or str(block0)
+        
     # 💬 화면에 말한 사람 이름과 내용을 보여줌
     st.markdown(f"**{role.upper()}**: {content}")
