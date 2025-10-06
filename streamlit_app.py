@@ -34,7 +34,7 @@ def load_agent():
     return Agent(
         model=model, 
         tools=[calculator],
-        system_prompt="정답만 이야기하고 추가적인 내용을 답하지 않는다. 예르 들어 '3 더하기 3은?' 이라고 질문하면 '6' 이라고만 답한다."  # “친절한 도우미가 되어라” 라는 지시문
+        system_prompt="너는 친절히 정답만 이야기한다."  #  예르 들어 '3 더하기 3은?' 이라고 질문하면 '6' 이라고만 답한다.
     )
 
 # 에이전트 실제로 만들기
@@ -46,14 +46,9 @@ if st.button("에이전트 실행"):
         try:
             result = agent(user_input)      # 사용자가 입력한 문장을 에이전트에게 전달
             st.success("응답")              # 성공 메시지
+            
             # 에이전트가 만든 대답 보여주기
-            # result.message 안에서 text만 추출해서 보여주기
-
-            if hasattr(result, "message") and isinstance(result.message, dict):
-                texts = [c.get("text", "") for c in result.message.get("content", []) if c.get("type") == "text"]
-                st.write("\n".join(texts) if texts else "⚠️ 출력할 텍스트가 없습니다.")
-            else:
-                st.write(result.message)
+            st.write(result.message)
 
         except Exception as e:
             st.error(f"오류: {e}")          # 문제가 생기면 오류 표시
