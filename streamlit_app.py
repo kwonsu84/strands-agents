@@ -1,8 +1,8 @@
 import os
 import streamlit as st
 from strands import Agent
-from strands_models_openai import OpenAIModel  # 핵심: 전용 모델 클래스 사용
-from strands_tools import calculator
+from strands.models.openai import OpenAIModel  # ← 정확한 경로
+from strands_tools import calculator           # 기본 도구 예시
 
 st.title("🧠 Strands Agent Demo (OpenAI)")
 
