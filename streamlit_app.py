@@ -66,6 +66,8 @@ if st.button("에이전트 실행"):
         except Exception as e:
             st.error(f"오류: {e}")          # 문제가 생기면 오류 표시
 
+st.write("❤️ 사용자 최근 질문")
+
 # 📜 이전 대화 내용을 화면에 보여줌
 for msg in agent.messages:              # 대화 기록을 하나씩 읽어오기
     role = msg.get("role", "")          # 누가 말했는지 (사용자 or 에이전트)
