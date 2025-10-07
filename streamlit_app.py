@@ -50,8 +50,6 @@ if st.button("에이전트 실행"):
             result = agent(user_input)      # 사용자가 입력한 문장을 에이전트에게 전달
             st.success("응답을 받았습니다")              # 성공 메시지
 
-
-
             # 에이전트 응답을 채팅 버블로 표시 + 마크다운 렌더링
             msg = result.message
             with st.chat_message("assistant"):
@@ -65,9 +63,6 @@ if st.button("에이전트 실행"):
                         st.markdown("\n\n".join(texts))
                     else:
                         st.info("출력할 텍스트가 없습니다.")
-
-                    with st.expander("원본 응답 보기"):
-                        st.json(msg)
                 else:
                     st.markdown(str(result.message))
 
