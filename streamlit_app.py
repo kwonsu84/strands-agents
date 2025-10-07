@@ -5,6 +5,7 @@ from strands import Agent     # 인공지능(에이전트)을 만들기 위한 S
 from strands.models.openai import OpenAIModel  # OpenAI 모델을 쓰기 위한 클래스
 from strands_tools import calculator           # 계산 도구 (에이전트가 계산할 수 있게 함)
 
+
 # 🧰 에이전트를 미리 만들어서 저장해 두는 함수
 @st.cache_resource  # Streamlit이 한 번 만든 에이전트를 계속 재사용하게 해줌
 def load_agent():
@@ -31,8 +32,10 @@ def load_agent():
         system_prompt="너는 친절히 정답만 이야기한다. 답하기 어렵거나 모르는 질문에 대해선 '모릅니다.'라고 해라."  #  예르 들어 '3 더하기 3은?' 이라고 질문하면 '6' 이라고만 답한다.
     )
 
+
 # 에이전트 실제로 만들기
 agent = load_agent()
+
 
 # 🧠 화면 제목 쓰기
 st.title("🧠 Strands Agent With OpenAI")
@@ -45,37 +48,56 @@ if st.button("에이전트 실행"):
     with st.spinner("생각 중..."):  # 에이전트가 답을 만드는 동안 표시되는 문구
         try:
             result = agent(user_input)      # 사용자가 입력한 문장을 에이전트에게 전달
-            st.success("응답")              # 성공 메시지
+            st.success("응답을 받았습니다")              # 성공 메시지
 
-            # 에이전트가 만든 대답 보여주기
-            # result.message 안에서 text 값만 출력
+            # 사용자 입력을 채팅 버블로 표시
+            with st.chat_message("user"):
+                st.markdown(user_input)
+
+            # 에이전트 응답을 채팅 버블로 표시 + 마크다운 렌더링
             msg = result.message
-            
-            # dict → content → text 구조만 꺼내기
-            if isinstance(msg, dict):
-                content = msg.get("content", [])
-                # 각 블록에서 text 키가 있으면 추출
-                texts = [block["text"] for block in content if isinstance(block, dict) and "text" in block]
-                if texts:
-                    st.write("\n".join(texts))
+            with st.chat_message("assistant"):
+                if isinstance(msg, dict):
+                    content = msg.get("content", [])
+                    texts = [
+                        block["text"] for block in content
+                        if isinstance(block, dict) and "text" in block
+                    ]
+                    if texts:
+                        st.markdown("\n\n".join(texts))
+                    else:
+                        st.info("출력할 텍스트가 없습니다.")
+
+                    with st.expander("원본 응답 보기"):
+                        st.json(msg)
                 else:
-                    st.write("⚠️ 출력할 text가 없습니다.")
-            else:
-                st.write(result.message)
+                    st.markdown(str(result.message))
+
+            st.toast("완료되었습니다 ✅", icon="✅")
 
         except Exception as e:
             st.error(f"오류: {e}")          # 문제가 생기면 오류 표시
 
-st.write("❤️ 사용자 최근 질문")
+st.write("❤️ 최근 대화")
 
 # 📜 이전 대화 내용을 화면에 보여줌
 for msg in agent.messages:              # 대화 기록을 하나씩 읽어오기
-    role = msg.get("role", "")          # 누가 말했는지 (사용자 or 에이전트)
-    content = ""
-    
-    if msg.get("content"):              # 실제 말한 내용 꺼내기
-        block0 = msg["content"][0]
-        content = block0.get("text") or str(block0)
-        
-    # 💬 화면에 말한 사람 이름과 내용을 보여줌
-    st.markdown(f"**{role.upper()}**: {content}")
+    role = msg.get("role", "assistant")
+    role_for_ui = role if role in ("user", "assistant") else "assistant"
+
+    # 모든 블록의 텍스트를 합쳐서 표시
+    content_text = ""
+    if msg.get("content"):
+        blocks = msg["content"]
+        texts = [
+            (b.get("text") if isinstance(b, dict) else str(b))
+            for b in blocks
+        ]
+        texts = [t for t in texts if t]
+        content_text = "\n\n".join(texts) if texts else str(blocks)
+
+    with st.chat_message(role_for_ui):
+        if content_text:
+            st.markdown(content_text)
+        else:
+            st.markdown(f"_{role.upper()} 메시지 내용이 없습니다._")
