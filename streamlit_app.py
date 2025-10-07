@@ -49,8 +49,8 @@ with st.form("qa_form", clear_on_submit=False):
 if submitted:
     with st.spinner("생각 중..."):  # 에이전트가 답을 만드는 동안 표시되는 문구
         try:
-            result = agent(user_input)      # 사용자가 입력한 문장을 에이전트에게 전달
-            st.success("응답을 받았습니다")              # 성공 메시지
+            result = agent(user_input)    # 사용자가 입력한 문장을 에이전트에게 전달
+            st.success("응답을 받았습니다")    # 성공 메시지
 
             # 에이전트 응답을 채팅 버블로 표시 + 마크다운 렌더링
             msg = result.message
@@ -74,7 +74,7 @@ if submitted:
 st.write("❤️ 최근 대화 히스토리")
 
 # 📜 이전 대화 내용을 화면에 보여줌
-for msg in agent.messages:              # 대화 기록을 하나씩 읽어오기
+for msg in reversed(agent.messages):       # 대화 기록을 하나씩 읽어오기
     role = msg.get("role", "assistant")
     role_for_ui = role if role in ("user", "assistant") else "assistant"
 
