@@ -66,8 +66,6 @@ if submitted:
                     else:
                         st.info("출력할 텍스트가 없습니다.")
 
-            st.toast("완료되었습니다 ✅", icon="✅")
-
         except Exception as e:
             st.error(f"오류: {e}")          # 문제가 생기면 오류 표시
 
