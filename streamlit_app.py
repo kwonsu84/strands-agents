@@ -49,8 +49,8 @@ with st.form("qa_form", clear_on_submit=False):
 if submitted:
     with st.spinner("생각 중..."):  # 에이전트가 답을 만드는 동안 표시되는 문구
         try:
-            result = agent(user_input)    # 사용자가 입력한 문장을 에이전트에게 전달
-            st.success("응답을 받았습니다")    # 성공 메시지
+            result = agent(user_input)      # 사용자가 입력한 문장을 에이전트에게 전달
+            st.success("응답을 받았습니다")              # 성공 메시지
 
             # 에이전트 응답을 채팅 버블로 표시 + 마크다운 렌더링
             msg = result.message
@@ -74,13 +74,9 @@ if submitted:
 st.write("❤️ 최근 대화 히스토리")
 
 # 📜 이전 대화 내용을 화면에 보여줌
-for msg in reversed(agent.messages):       # 대화 기록을 하나씩 읽어오기
-    role = msg.get("role", "assistant")
-    role_for_ui = role if role in ("user", "assistant") else "assistant"
-
-    # 모든 블록의 텍스트를 합쳐서 표시
+def _extract_text_from_msg(msg):
     content_text = ""
-    if msg.get("content"):
+    if msg and msg.get("content"):
         blocks = msg["content"]
         texts = [
             (b.get("text") if isinstance(b, dict) else str(b))
@@ -88,9 +84,36 @@ for msg in reversed(agent.messages):       # 대화 기록을 하나씩 읽어�
         ]
         texts = [t for t in texts if t]
         content_text = "\n\n".join(texts) if texts else str(blocks)
+    return content_text
 
-    with st.chat_message(role_for_ui):
-        if content_text:
-            st.markdown(content_text)
+# 메시지를 (user, assistant) 턴 단위로 묶기
+turns = []
+pending_user = None
+for _msg in agent.messages:
+    _role = _msg.get("role", "assistant")
+    if _role == "user":
+        if pending_user is not None:
+            # 이전 사용자 메시지가 응답 없이 남아있으면 턴으로 추가
+            turns.append((pending_user, None))
+        pending_user = _msg
+    elif _role == "assistant":
+        if pending_user is not None:
+            turns.append((pending_user, _msg))
+            pending_user = None
         else:
-            st.markdown(f"_{role.upper()} 메시지 내용이 없습니다._")
+            # 사용자 없이 어시스턴트만 있는 경우 단독 턴 처리
+            turns.append((None, _msg))
+
+if pending_user is not None:
+    turns.append((pending_user, None))
+
+# 최신 턴이 위로 오도록 역순 렌더링하되, 턴 내부 순서는 사용자→어시스턴트 유지
+for user_msg, assistant_msg in reversed(turns):
+    if user_msg is not None:
+        with st.chat_message("user"):
+            user_text = _extract_text_from_msg(user_msg)
+            st.markdown(user_text or "_USER 메시지 내용이 없습니다._")
+    if assistant_msg is not None:
+        with st.chat_message("assistant"):
+            asst_text = _extract_text_from_msg(assistant_msg)
+            st.markdown(asst_text or "_ASSISTANT 메시지 내용이 없습니다._")
