@@ -63,8 +63,6 @@ if st.button("에이전트 실행"):
                         st.markdown("\n\n".join(texts))
                     else:
                         st.info("출력할 텍스트가 없습니다.")
-                else:
-                    st.markdown(str(result.message))
 
             st.toast("완료되었습니다 ✅", icon="✅")
 
